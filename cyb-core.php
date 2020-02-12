@@ -32,6 +32,10 @@ class CybCore extends \App\Utility\Singleton {
 
         add_action('admin_init', [$this, 'wpAdminInit']);
         add_action('admin_menu', [$this, 'wpAdminMenu']);
+
+        add_action('widgets_init', [$this, 'wpWidgetsInit']);
+
+        add_action('wp_enqueue_scripts', [$this, 'wpEnqueueScripts']);
         add_action('wp_footer', [$this, 'wpFooter']);
     }
 
@@ -231,6 +235,15 @@ class CybCore extends \App\Utility\Singleton {
             </div>
         </div>
         <?php
+    }
+
+    public function wpWidgetsInit() {
+        register_widget('App\Widget\LoginWidget');
+        register_widget('App\Widget\NavigationWidget');
+    }
+
+    public function wpEnqueueScripts() {
+        wp_enqueue_style('cyb-core-frontend', plugins_url('assets/frontend.css', dirname(__DIR__)));
     }
 
     public function wpFooter() {
