@@ -12,7 +12,7 @@ if (WP_UNINSTALL_PLUGIN !== $plugin && $action !== 'delete-plugin') {
 global $wpdb;
 
 try {
-    $wpOptions = $wpdb->get_results('SELECT `option_name` FROM `' . $wpdb->options . '` WHERE `option_name` LIKE \'cyb_tools_%\'');
+    $wpOptions = $wpdb->get_results('SELECT `option_name` FROM `' . $wpdb->options . '` WHERE `option_name` LIKE \'cyb-tools-%\'');
     foreach ($wpOptions as $option) {
         delete_option($option->option_name);
     }
