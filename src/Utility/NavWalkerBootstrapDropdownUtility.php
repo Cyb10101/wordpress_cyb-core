@@ -1,5 +1,5 @@
 <?php
-namespace Cyb\Utility;
+namespace App\Utility;
 
 class NavWalkerBootstrapDropdownUtility extends NavWalkerBootstrapUtility {
     public function start_lvl(&$output, $depth = 0, $args = array()) {

@@ -1,5 +1,5 @@
 <?php
-namespace Cyb\Utility;
+namespace App\Utility;
 
 class PluginUpdaterUtility {
     protected $pluginSlug = '';

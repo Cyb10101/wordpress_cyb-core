@@ -42,7 +42,7 @@ class CybCore extends \App\Utility\Singleton {
     public function wpAdminInit() {
         wp_enqueue_style('cyb-core-admin', plugins_url('assets/admin.css', __DIR__ . '/.'), [], false);
         wp_enqueue_script('cyb-core-admin', plugins_url('assets/admin.js', __DIR__ . '/.'), ['jquery'], false, true);
-        new \Cyb\Utility\PluginUpdaterUtility(__FILE__);
+        new \App\Utility\PluginUpdaterUtility(__FILE__);
     }
 
     public function wpAdminMenu() {

@@ -34,8 +34,8 @@ class NavigationWidget extends \WP_Widget {
                 'container_id' => '',
                 'menu_class' => 'nav flex-column d-xl-block d-lg-block d-none',
             ];
-            if (class_exists('Cyb\Utility\NavWalkerBootstrapDropdownUtility')) {
-                $wpNavMenu['walker'] = new \Cyb\Utility\NavWalkerBootstrapDropdownUtility();
+            if (class_exists('App\Utility\NavWalkerBootstrapDropdownUtility')) {
+                $wpNavMenu['walker'] = new \App\Utility\NavWalkerBootstrapDropdownUtility();
             }
             wp_nav_menu($wpNavMenu);
         } else {

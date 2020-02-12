@@ -1,5 +1,5 @@
 <?php
-namespace Cyb\Utility;
+namespace App\Utility;
 
 class NavWalkerBootstrapUtility extends \Walker_Nav_Menu {
     protected function getIndent(\stdClass $args = null, int $depth = 0): string {
