@@ -14,9 +14,22 @@ class PluginUpdaterUtility {
             $this->setRepositoryByUrl($repositoryUrl);
         }
 
+        add_action('admin_notices', [$this, 'adminNotices']);
         add_filter('pre_set_site_transient_update_plugins', [$this, 'setTransient']);
         add_filter('plugins_api', [$this, 'setPluginInfo'], 10, 3);
         add_filter('upgrader_post_install', [$this, 'postInstall'], 10, 3);
+    }
+
+    public function adminNotices() {
+        $errors = get_option('cyb-plugin-updater-errors', []);
+        if (count($errors) > 0) {
+            ?>
+            <div class="notice notice-error is-dismissible">
+                <p><?php echo implode('<br>', $errors); ?></p>
+            </div>
+            <?php
+            delete_option('cyb-plugin-updater-errors');
+        }
     }
 
     protected function setRepositoryByUrl(string $url) {
@@ -76,18 +89,18 @@ class PluginUpdaterUtility {
         $url = $this->buildUrl($this->repository->apiUrlRoot . '/' . $path);
         $result = wp_remote_retrieve_body(wp_remote_get($url));
         if (empty($result)) {
-            $this->renderError('Error: Api result empty!');
+            $this->addError('Api result empty!');
             return null;
         }
 
         $result = @json_decode($result);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->renderError('Error: No valid json received!');
+            $this->addError('No valid json received!');
             return null;
         }
         if ($this->repository->provider === 'github') {
             if ($result instanceof \stdClass && isset($result->message) && $result->message === 'Not Found') {
-                $this->renderError('Error: Api not found!');
+                $this->addError('Api not found!');
                 return null;
             }
         }
@@ -211,10 +224,10 @@ class PluginUpdaterUtility {
         });
     }
 
-    protected function renderError(string $message) {
-        ?><script type="text/javascript">
-        console.error('<?php echo '[' . $this->pluginSlug . ' updater] ' . $message; ?>');
-        </script><?php
+    protected function addError(string $message) {
+        $errors = get_option('cyb-plugin-updater-errors', []);
+        $errors[] = '<b>Error: ' . __('Plugin') . ' ' . dirname($this->pluginSlug) . ' updater!</b> ' . $message;
+        update_option('cyb-plugin-updater-errors', $errors);
     }
 }
 
