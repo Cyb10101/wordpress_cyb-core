@@ -243,7 +243,7 @@ class CybCore extends \App\Utility\Singleton {
     }
 
     public function wpEnqueueScripts() {
-        wp_enqueue_style('cyb-core-frontend', plugins_url('assets/frontend.css', dirname(__DIR__)));
+        wp_enqueue_style('cyb-core-frontend', plugins_url('assets/frontend.css', __FILE__), [], false);
     }
 
     public function wpFooter() {
