@@ -7,6 +7,7 @@ class LoginWidget extends \WP_Widget {
     }
 
     public function widget($args, $instance) {
+        $args['widget_id'] = str_replace('\\', '_', $args['widget_id']);
         $title = apply_filters('widget_title', $instance['title']);
         $showWidgetFrame = (bool)apply_filters('widget_showWidgetFrame', $instance['showWidgetFrame']);
         $showTitle = (bool)apply_filters('widget_showTitle', $instance['showTitle']);

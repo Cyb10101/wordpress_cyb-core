@@ -7,6 +7,7 @@ class NavigationWidget extends \WP_Widget {
     }
 
     public function widget($args, $instance) {
+        $args['widget_id'] = str_replace('\\', '_', $args['widget_id']);
         $title = apply_filters('widget_title', $instance['title']);
         $menuSlug = apply_filters('widget_menuSlug', $instance['menuSlug']);
         $showWidgetFrame = (bool)apply_filters('widget_showWidgetFrame', $instance['showWidgetFrame']);
