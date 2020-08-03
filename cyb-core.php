@@ -93,7 +93,7 @@ class CybCore extends \App\Utility\Singleton {
     }
 
     public function adminPage() {
-        $wpFormUtility = \App\Utility\WpFormUtility::getInstance();
+        $templatesDirectory = plugin_dir_path(__FILE__) . 'templates';
         ?>
         <div class="wrap cyb-core-admin">
             <?php $this->renderBreadcrumb([
@@ -106,7 +106,7 @@ class CybCore extends \App\Utility\Singleton {
             </div>
 
             <div id="dashboard" class="container-3">
-                <div><?php require_once(plugin_dir_path(__FILE__) . 'templates/id-columns.php'); ?></div>
+                <div><?php require_once($templatesDirectory . '/id-columns.php'); ?></div>
                 <div>
                 </div>
                 <div>
@@ -116,7 +116,7 @@ class CybCore extends \App\Utility\Singleton {
             <div id="development" class="container-3" style="display: none;">
                 <div><?php
                     // @todo translations should be copied on installation/activation
-                    require_once(plugin_dir_path(__FILE__) . 'templates/generate-translation.php'); ?></div>
+                    require_once($templatesDirectory . '/generate-translation.php'); ?></div>
                 <div>
                     <?php
                     var_dump($this->entityManager->getRepository(\App\Entity\WordPressOptions::class)->findOneBy([]));
@@ -159,15 +159,15 @@ class CybCore extends \App\Utility\Singleton {
     }
 
     public function adminPageStatistics() {
-        $wpFormUtility = \App\Utility\WpFormUtility::getInstance();
+        $templatesDirectory = plugin_dir_path(__FILE__) . 'templates';
         ?>
         <div class="wrap cyb-core-admin">
             <?php $this->renderBreadcrumb([
                 ['title' => 'Statistics & Analytics'],
             ]); ?>
             <div class="container-3">
-                <div><?php require_once(plugin_dir_path(__FILE__) . 'templates/analytics-google.php'); ?></div>
-                <div><?php require_once(plugin_dir_path(__FILE__) . 'templates/analytics-matomo.php'); ?></div>
+                <div><?php require_once($templatesDirectory . '/analytics-google.php'); ?></div>
+                <div><?php require_once($templatesDirectory . '/analytics-matomo.php'); ?></div>
                 <div>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 <?php
+$wpFormUtility = \App\Utility\WpFormUtility::getInstance();
 $analyticsMatomo = get_option('cyb-core-analytics-matomo', []);
 $analyticsMatomo = wp_parse_args($analyticsMatomo, [
     'enabled' => false,
@@ -13,7 +14,6 @@ $analyticsMatomo = wp_parse_args($analyticsMatomo, [
             <input type="hidden" name="action" value="admin-general">
             <input type="hidden" name="task" value="analytics-matomo"/>
             <?php
-            /** @noinspection PhpUndefinedVariableInspection */
             $wpFormUtility->renderCheckbox('analytics-matomo', 'enabled', $analyticsMatomo['enabled'], [
                 'label' => 'Use Matomo',
                 'help' => 'Website: <a href="https://matomo.org/" target="_blank">Matomo</a>',

@@ -1,4 +1,5 @@
 <?php
+$wpFormUtility = \App\Utility\WpFormUtility::getInstance();
 $analyticsGoogle = get_option('cyb-core-analytics-google', []);
 $analyticsGoogle = wp_parse_args($analyticsGoogle, [
     'enabled' => false,
@@ -15,7 +16,6 @@ $analyticsGoogle = wp_parse_args($analyticsGoogle, [
             <input type="hidden" name="action" value="admin-general">
             <input type="hidden" name="task" value="analytics-google"/>
             <?php
-            /** @noinspection PhpUndefinedVariableInspection */
             $wpFormUtility->renderCheckbox('analytics-google', 'enabled', $analyticsGoogle['enabled'], [
                 'label' => 'Use Google Analytics',
                 'help' => 'Website: <a href="https://analytics.google.com/" target="_blank">Google Analytics</a>',
