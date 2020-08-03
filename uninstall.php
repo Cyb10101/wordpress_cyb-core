@@ -12,9 +12,10 @@ if (WP_UNINSTALL_PLUGIN !== $plugin && $action !== 'delete-plugin') {
 global $wpdb;
 
 try {
-    $wpOptions = $wpdb->get_results('SELECT `option_name` FROM `' . $wpdb->options . '` WHERE `option_name` LIKE \'cyb-tools-%\'');
+    $wpOptions = $wpdb->get_results('SELECT `option_name` FROM `' . $wpdb->options . '` WHERE `option_name` LIKE \'cyb-core-%\'');
     foreach ($wpOptions as $option) {
         delete_option($option->option_name);
+        // delete_site_option($option_name); // @todo For options in multi site?
     }
 } catch (Exception $exception) {
     error_log('Error deleting plugin options!');

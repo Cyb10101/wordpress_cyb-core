@@ -75,7 +75,7 @@ class WpFormUtility extends Singleton {
 
     public function renderButtonSubmit(string $task, array $arguments = []) {
         $arguments = wp_parse_args($arguments, [
-            'label' => 'Save changes',
+            'label' => __('Save'),
             'help' => '',
         ]);
 

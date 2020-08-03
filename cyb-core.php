@@ -1,12 +1,14 @@
 <?php
-/*
-Plugin Name: Cyb Core
-Plugin URI: https://github.com/Cyb10101/wordpress_cyb-core
-Description: Core plugin
-Author: Thomas Schur
-Version: 1.0.0
-Author URI: https://github.com/Cyb10101
-*/
+/**
+ * Plugin Name: Cyb Core
+ * Plugin URI: https://github.com/Cyb10101/wordpress_cyb-core
+ * Description: Core plugin
+ * Author: Thomas Schur
+ * Version: 1.0.0
+ * Author URI: https://github.com/Cyb10101
+ * Text Domain: cyb-core
+ * Domain Path: /languages
+ */
 
 use App\Ajax\AdminGeneralAjax;
 
@@ -29,7 +31,6 @@ class CybCore extends \App\Utility\Singleton {
         $this->entityManager = $this->doctrineUtility->getEntityManager();
 
         AdminGeneralAjax::getInstance();
-
         add_action('admin_init', [$this, 'wpAdminInit']);
         add_action('admin_menu', [$this, 'wpAdminMenu']);
 
@@ -37,12 +38,15 @@ class CybCore extends \App\Utility\Singleton {
 
         add_action('wp_enqueue_scripts', [$this, 'wpEnqueueScripts']);
         add_action('wp_footer', [$this, 'wpFooter']);
+
+        add_filter('plugin_action_links', [$this, 'wpPluginActionLinks'], 10, 2);
     }
 
     public function wpAdminInit() {
         wp_enqueue_style('cyb-core-admin', plugins_url('assets/admin.css', __DIR__ . '/.'), [], false);
         wp_enqueue_script('cyb-core-admin', plugins_url('assets/admin.js', __DIR__ . '/.'), ['jquery'], false, true);
         new \App\Utility\PluginUpdaterUtility(__FILE__);
+        $this->idColumnsAddToLists();
     }
 
     public function wpAdminMenu() {
@@ -89,22 +93,30 @@ class CybCore extends \App\Utility\Singleton {
     }
 
     public function adminPage() {
+        $wpFormUtility = \App\Utility\WpFormUtility::getInstance();
         ?>
         <div class="wrap cyb-core-admin">
             <?php $this->renderBreadcrumb([
                 ['title' => 'General Settings'],
             ]); ?>
-            <div class="container-3">
+
+            <div class="nav-tab-wrapper">
+                <a class="nav-tab nav-tab-active" id="dashboard-tab" href="#dashboard"><?php _e('Dashboard', 'cyb-core'); ?></a>
+                <a class="nav-tab" id="features-tab" href="#development"><?php _e('Development', 'cyb-core'); ?></a>
+            </div>
+
+            <div id="dashboard" class="container-3">
+                <div><?php require_once(plugin_dir_path(__FILE__) . 'templates/id-columns.php'); ?></div>
                 <div>
-
-                    <div class="card">
-                        <div class="card-header">In development</div>
-                        <div class="card-body">
-                            In development
-                        </div>
-                    </div>
-
                 </div>
+                <div>
+                </div>
+            </div>
+
+            <div id="development" class="container-3" style="display: none;">
+                <div><?php
+                    // @todo translations should be copied on installation/activation
+                    require_once(plugin_dir_path(__FILE__) . 'templates/generate-translation.php'); ?></div>
                 <div>
                     <?php
                     var_dump($this->entityManager->getRepository(\App\Entity\WordPressOptions::class)->findOneBy([]));
@@ -148,89 +160,15 @@ class CybCore extends \App\Utility\Singleton {
 
     public function adminPageStatistics() {
         $wpFormUtility = \App\Utility\WpFormUtility::getInstance();
-
-        $analyticsGoogle = get_option('cyb-core-analytics-google', []);
-        $analyticsGoogle = wp_parse_args($analyticsGoogle, [
-            'enabled' => false,
-            'tag' => '',
-            'ownCode' => false,
-            'code' => '',
-        ]);
-
-        $analyticsMatomo = get_option('cyb-core-analytics-matomo', []);
-        $analyticsMatomo = wp_parse_args($analyticsMatomo, [
-            'enabled' => false,
-            'code' => '',
-        ]);
         ?>
         <div class="wrap cyb-core-admin">
             <?php $this->renderBreadcrumb([
                 ['title' => 'Statistics & Analytics'],
             ]); ?>
             <div class="container-3">
+                <div><?php require_once(plugin_dir_path(__FILE__) . 'templates/analytics-google.php'); ?></div>
+                <div><?php require_once(plugin_dir_path(__FILE__) . 'templates/analytics-matomo.php'); ?></div>
                 <div>
-
-                    <div class="card">
-                        <div class="card-header">Google Analytics</div>
-                        <div class="card-body">
-                            <form method="post" action="<?php echo admin_url('/admin-ajax.php'); ?>" class="analytics-google">
-                                <?php wp_nonce_field('admin-general-nonce'); ?>
-                                <input type="hidden" name="action" value="admin-general">
-                                <input type="hidden" name="task" value="analytics-google"/>
-                                <?php
-                                $wpFormUtility->renderCheckbox('analytics-google', 'enabled', $analyticsGoogle['enabled'], [
-                                    'label' => 'Use Google Analytics',
-                                    'help' => 'Website: <a href="https://analytics.google.com/" target="_blank">Google Analytics</a>',
-                                ]);
-                                $wpFormUtility->renderTextBox('analytics-google', 'tag', $analyticsGoogle['tag'], [
-                                    'label' => 'GTAG Nummer',
-                                    'help' => 'Your Google Analytics ID (UA-XXXXXXXX-X)',
-                                    'placeholder' => 'UA-XXXXXXXX-X',
-                                    'pattern' => 'UA-[\d]+-[\d]+',
-                                ]);
-                                $wpFormUtility->renderCheckbox('analytics-google', 'ownCode', $analyticsGoogle['ownCode'], [
-                                    'label' => 'Use own code',
-                                ]);
-                                $wpFormUtility->renderTextArea('analytics-google', 'code', $analyticsGoogle['code'], [
-                                    'label' => 'Code',
-                                    'rows' => 7,
-                                ]);
-                                $wpFormUtility->renderButtonSubmit('analytics-google', [
-                                ]);
-                                ?>
-                            </form>
-                        </div>
-                    </div>
-
-                </div>
-                <div>
-
-                    <div class="card">
-                        <div class="card-header">Matomo</div>
-                        <div class="card-body">
-                            <form method="post" action="<?php echo admin_url('/admin-ajax.php'); ?>" class="analytics-matomo">
-                                <?php wp_nonce_field('admin-general-nonce'); ?>
-                                <input type="hidden" name="action" value="admin-general">
-                                <input type="hidden" name="task" value="analytics-matomo"/>
-                                <?php
-                                $wpFormUtility->renderCheckbox('analytics-matomo', 'enabled', $analyticsMatomo['enabled'], [
-                                    'label' => 'Use Matomo',
-                                    'help' => 'Website: <a href="https://matomo.org/" target="_blank">Matomo</a>',
-                                ]);
-                                $wpFormUtility->renderTextArea('analytics-matomo', 'code', $analyticsMatomo['code'], [
-                                    'label' => 'Code',
-                                    'rows' => 5,
-                                ]);
-                                $wpFormUtility->renderButtonSubmit('analytics-matomo', [
-                                ]);
-                                ?>
-                            </form>
-                        </div>
-                    </div>
-
-                </div>
-                <div>
-
                 </div>
             </div>
         </div>
@@ -256,6 +194,110 @@ class CybCore extends \App\Utility\Singleton {
         if (isset($analyticsMatomo['enabled']) && $analyticsMatomo['enabled']) {
             echo $analyticsMatomo['code'];
         }
+    }
+
+    public function wpPluginActionLinks(array $links, string $file) {
+        if ($file === 'cyb-core/cyb-core.php') {
+            $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=cyb-core')) . '">' . __('Settings') . '</a>';
+            array_unshift($links, $settings_link);
+        }
+        return $links;
+    }
+
+    protected function getAllPostTypes(array $args = ['public' => true]) {
+        global $wp_post_types;
+
+        $list = [];
+        $postTypes = wp_filter_object_list($wp_post_types, $args, 'AND');
+        /** @var \WP_Post_Type $postType */
+        foreach ($postTypes as $postType) {
+            if ($postType->name === 'attachment') {
+                continue;
+            }
+            $list[$postType->name] = $postType->label;
+        }
+        return $list;
+    }
+
+    protected function idColumnsAddToLists() {
+        $capabilitySorting = version_compare($GLOBALS['wp_version'], '3.0.999', '>');
+        $idColumns = get_option('cyb-core-id-columns', []);
+
+        // Posts & Pages Management
+        foreach ($this->getAllPostTypes() as $key => $label) {
+            if (isset($idColumns[$key]) && $idColumns[$key]) {
+                add_action('manage_edit-' . $key . '_columns', [$this, 'idColumnsColumn']);
+                add_filter('manage_' . $key . '_posts_custom_column', [$this, 'idColumnsValue'], 10, 3);
+                if ($capabilitySorting) {
+                    add_filter('manage_edit-' . $key . '_sortable_columns', [$this, 'idColumnsColumn']);
+                }
+            }
+        }
+
+        // Media Management
+        if (isset($idColumns['media']) && $idColumns['media']) {
+            add_action('manage_media_columns', [$this, 'idColumnsColumn']);
+            add_filter('manage_media_custom_column', [$this, 'idColumnsValue'], 10, 3);
+            if ($capabilitySorting) {
+                add_filter('manage_upload_sortable_columns', [$this, 'idColumnsColumn']);
+            }
+        }
+
+        // User Management
+        if (isset($idColumns['user']) && $idColumns['user']) {
+            add_action('manage_users_columns', [$this, 'idColumnsColumn']);
+            add_filter('manage_users_custom_column', [$this, 'idColumnsReturnValue'], 10, 3);
+            if ($capabilitySorting) {
+                add_filter('manage_users_sortable_columns', [$this, 'idColumnsColumn']);
+            }
+        }
+
+        // Comment Management
+        if (isset($idColumns['comment']) && $idColumns['comment']) {
+            add_action('manage_edit-comments_columns', [$this, 'idColumnsColumn']);
+            add_action('manage_comments_custom_column', [$this, 'idColumnsValue'], 10, 2);
+            if ($capabilitySorting) {
+                add_filter('manage_edit-comments_sortable_columns', [$this, 'idColumnsColumn']);
+            }
+        }
+
+        // Link Management
+        add_action('manage_link_custom_column', [$this, 'idColumnsValue'], 10, 2);
+        add_filter('manage_link-manager_columns', [$this, 'idColumnsColumn']);
+
+        // Link Management: Category
+        add_action('manage_edit-link-categories_columns', [$this, 'idColumnsColumn']);
+        add_filter('manage_link_categories_custom_column', [$this, 'idColumnsReturnValue'], 10, 3);
+
+        // Category, Tags and other custom taxonomies Management
+        foreach (get_taxonomies() as $key => $label) {
+            if (isset($idColumns['category']) && $idColumns['category']) {
+                add_action('manage_edit-' . $key . '_columns', [$this, 'idColumnsColumn']);
+                add_filter('manage_' . $key . '_custom_column', [$this, 'idColumnsReturnValue'], 10, 3);
+                if ($capabilitySorting) {
+                    add_filter('manage_edit-' . $key . '_sortable_columns', [$this, 'idColumnsColumn']);
+                }
+            }
+        }
+    }
+
+    public function idColumnsColumn($cols) {
+        $columnId = ['cyb-core-id-column' => __('ID', 'cyb-core')];
+        $cols = array_slice($cols, 0, 1, true) + $columnId + array_slice($cols, 1, null, true);
+        return $cols;
+    }
+
+    public function idColumnsValue($column_name, $id) {
+        if ($column_name === 'cyb-core-id-column') {
+            echo $id;
+        }
+    }
+
+    public function idColumnsReturnValue($value, $column_name, $id) {
+        if ($column_name === 'cyb-core-id-column') {
+            $value .= $id;
+        }
+        return $value;
     }
 }
 

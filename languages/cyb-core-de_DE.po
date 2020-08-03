@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Cyb Core\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cyb-core\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: cyb-core\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de_DE\n"
+
+msgid "Development"
+msgstr "Entwicklung"
+
+msgid "Show ID column in lists"
+msgstr "ID Spalte in Listen zeigen"

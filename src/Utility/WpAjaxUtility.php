@@ -4,8 +4,10 @@ namespace App\Utility;
 class WpAjaxUtility extends Singleton {
     protected $action = '';
     protected $public = false;
+    protected $pluginDirectory = '';
 
     protected function initializeInstance() {
+        $this->pluginDirectory = realpath(__DIR__ . '/../..');
         if ($this->public) {
             add_action('wp_ajax_nopriv_' . $this->action, [$this, 'bootstrap']);
         } else {
