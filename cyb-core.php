@@ -199,7 +199,7 @@ class CybCore extends \App\Utility\Singleton {
     public function wpPluginActionLinks(array $links, string $file) {
         if ($file === 'cyb-core/cyb-core.php') {
             $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=cyb-core')) . '">' . __('Settings') . '</a>';
-            array_unshift($links, $settings_link);
+            array_push($links, $settings_link);
         }
         return $links;
     }
