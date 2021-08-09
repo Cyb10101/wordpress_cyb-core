@@ -2,14 +2,8 @@
 namespace App\Utility;
 
 class Singleton {
-    /**
-     * @var array
-     */
-    private static $_instance = [];
+    private static array $_instance = [];
 
-    /**
-     * @return Singleton
-     */
     public static function getInstance() {
         $className = get_called_class();
         if (!isset(self::$_instance[$className])) {
@@ -25,14 +19,10 @@ class Singleton {
     /**
      * Disable constructor
      */
-    final private function __construct() {
-    }
+    private function __construct() {}
 
     /**
      * Disable clone
-     *
-     * @return void
      */
-    final private function __clone() {
-    }
+    private function __clone() {}
 }
