@@ -73,6 +73,29 @@ class WpFormUtility extends Singleton {
         </div><?php
     }
 
+    /**
+     * $wpFormUtility->renderSelect('gender', 'gender', 'male', [
+     *     'selectAttributes' => 'required size="5"',
+     *     'selectClasses' => 'form-select',
+     * ], ['female' => 'Female', 'male' => 'Male', 'other' => 'Other']);
+     */
+    public function renderSelect(string $id, string $name, string $valueSelected, array $arguments = [], array $options = []) {
+        $arguments = wp_parse_args($arguments, [
+            'selectAttributes' => '',
+            'selectClasses' => 'form-select',
+        ]);
+
+        $htmlId = ' id="' . $id . '_' . $name . '"';
+        $htmlName = ' name="' . $name . '"';
+        ?><select class="<?php echo $arguments['selectClasses']; ?>"<?php echo $htmlId.$htmlName.' '.$arguments['selectAttributes']; ?>><?php
+            foreach ($options as $key => $value) {
+                $selected = ($key === $valueSelected);
+                $htmlSelected = ' ' . selected($selected, true, false);
+                echo '<option value="' . esc_attr($key) . '"' . $htmlSelected . '>' . $value . '</option>';
+            }
+        ?></select><?php
+    }
+
     public function renderButtonSubmit(string $task, array $arguments = []) {
         $arguments = wp_parse_args($arguments, [
             'label' => __('Save'),
