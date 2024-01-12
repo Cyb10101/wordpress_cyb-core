@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header"><?php _e('Show ID column in lists', 'cyb-core'); ?></div>
+    <div class="card-header"><?php _e('Show id column lists (on Admin page)', 'cyb-core'); ?></div>
     <div class="card-body">
         <form id="cyb-core-id-columns-form">
             <input type="hidden" name="action" value="admin-general">

@@ -12,5 +12,5 @@ msgstr ""
 msgid "Development"
 msgstr "Entwicklung"
 
-msgid "Show ID column in lists"
-msgstr "ID Spalte in Listen zeigen"
+msgid "Show id column lists (on Admin page)"
+msgstr "ID-Spaltenlisten anzeigen (auf der Admin-Seite)"
