@@ -20,7 +20,6 @@ class CybCoreAdminPage {
                     if (tabs2.length > 0) {
                         tabs2.forEach(tab2 => {
                             tab2.classList.remove(tabClassActive);
-
                             instance.toggleTabContainer(tab2.hash, false);
                         });
 
