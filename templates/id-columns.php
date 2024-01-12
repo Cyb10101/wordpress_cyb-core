@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header"><?php _e('Show id column lists (on Admin page)', 'cyb-core'); ?></div>
     <div class="card-body">
-        <form id="cyb-core-id-columns-form">
+        <form id="cyb-core-id-columns-form" action="<?php echo admin_url('/admin-ajax.php'); ?>">
             <input type="hidden" name="action" value="admin-general">
             <input type="hidden" name="task" value="id-columns"/>
             <?php

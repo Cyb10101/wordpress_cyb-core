@@ -22,8 +22,8 @@ $analyticsGoogle = wp_parse_args($analyticsGoogle, [
             ]);
             $wpFormUtility->renderTextBox('analytics-google', 'tag', $analyticsGoogle['tag'], [
                 'label' => 'GTAG Nummer',
-                'help' => 'Your Google Analytics ID (UA-XXXXXXXX-X)',
-                'placeholder' => 'UA-XXXXXXXX-X',
+                'help' => 'Your Google Analytics ID (UA-00000000-0)',
+                'placeholder' => 'UA-00000000-0',
                 'pattern' => 'UA-[\d]+-[\d]+',
             ]);
             $wpFormUtility->renderCheckbox('analytics-google', 'ownCode', $analyticsGoogle['ownCode'], [

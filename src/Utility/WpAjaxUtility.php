@@ -29,7 +29,7 @@ class WpAjaxUtility extends Singleton {
     }
 
     protected function checkCSRF() {
-        $submittedNonce = $_REQUEST['_wpnonce'] ?? '';
+        $submittedNonce = sanitize_text_field($_REQUEST['_wpnonce'] ?? '');
         if (!wp_verify_nonce($submittedNonce, $this->action . '-nonce')) {
             wp_die(__('CSRF ERROR: Nonce not valid!', 'cyb-core'), '', 403);
         }
