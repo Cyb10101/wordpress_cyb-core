@@ -1,74 +1,66 @@
 <?php
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
- */
+
+declare(strict_types=1);
 
 namespace Doctrine\ORM\Query\Exec;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Cache\QueryCacheProfile;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
+use Doctrine\DBAL\Types\Type;
+
+use function array_diff;
+use function array_keys;
+use function array_map;
+use function array_values;
+use function str_replace;
 
 /**
  * Base class for SQL statement executors.
  *
- * @author      Roman Borschel <roman@code-factory.org>
- * @license     http://www.opensource.org/licenses/mit-license.php MIT
  * @link        http://www.doctrine-project.org
- * @since       2.0
+ *
  * @todo Rename: AbstractSQLExecutor
  */
 abstract class AbstractSqlExecutor
 {
     /**
-     * @var array
+     * @deprecated use $sqlStatements instead
+     *
+     * @var list<string>|string
      */
     protected $_sqlStatements;
 
-    /**
-     * @var QueryCacheProfile
-     */
+    /** @var list<string>|string */
+    protected $sqlStatements;
+
+    /** @var QueryCacheProfile */
     protected $queryCacheProfile;
+
+    public function __construct()
+    {
+        $this->_sqlStatements = &$this->sqlStatements;
+    }
 
     /**
      * Gets the SQL statements that are executed by the executor.
      *
-     * @return array  All the SQL update statements.
+     * @return mixed[]|string  All the SQL update statements.
      */
     public function getSqlStatements()
     {
-        return $this->_sqlStatements;
+        return $this->sqlStatements;
     }
 
-    /**
-     * @param \Doctrine\DBAL\Cache\QueryCacheProfile $qcp
-     *
-     * @return void
-     */
-    public function setQueryCacheProfile(QueryCacheProfile $qcp)
+    public function setQueryCacheProfile(QueryCacheProfile $qcp): void
     {
         $this->queryCacheProfile = $qcp;
     }
 
     /**
      * Do not use query cache
-     *
-     * @return void
      */
-    public function removeQueryCacheProfile()
+    public function removeQueryCacheProfile(): void
     {
         $this->queryCacheProfile = null;
     }
@@ -76,11 +68,35 @@ abstract class AbstractSqlExecutor
     /**
      * Executes all sql statements.
      *
-     * @param Connection $conn   The database connection that is used to execute the queries.
-     * @param array      $params The parameters.
-     * @param array      $types  The parameter types.
+     * @param Connection                                                           $conn   The database connection that is used to execute the queries.
+     * @param list<mixed>|array<string, mixed>                                     $params The parameters.
+     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  The parameter types.
      *
-     * @return \Doctrine\DBAL\Driver\Statement
+     * @return Result|int
      */
     abstract public function execute(Connection $conn, array $params, array $types);
+
+    /** @return list<string> */
+    public function __sleep(): array
+    {
+        /* Two reasons for this:
+           - we do not need to serialize the deprecated property, we can
+             rebuild the reference to the new property in __wakeup()
+           - not having the legacy property in the serialized data means the
+             serialized representation becomes compatible with 3.0.x, meaning
+             there will not be a deprecation warning about a missing property
+             when unserializing data */
+        return array_values(array_diff(array_map(static function (string $prop): string {
+            return str_replace("\0*\0", '', $prop);
+        }, array_keys((array) $this)), ['_sqlStatements']));
+    }
+
+    public function __wakeup(): void
+    {
+        if ($this->_sqlStatements !== null && $this->sqlStatements === null) {
+            $this->sqlStatements = $this->_sqlStatements;
+        }
+
+        $this->_sqlStatements = &$this->sqlStatements;
+    }
 }
