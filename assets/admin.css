@@ -247,11 +247,11 @@
 }
 
 /* Toggle Switch */
-.cyb-core-input-switch {
+.cyb-core-admin .cyb-core-input-switch {
     position: relative;
     margin-bottom: 3px;
 }
-.cyb-core-input-switch .spinner-border {
+.cyb-core-admin .cyb-core-input-switch .spinner-border {
     opacity: 0;
     position: absolute;
     top: 50%;
