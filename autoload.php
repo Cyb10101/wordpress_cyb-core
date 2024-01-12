@@ -23,4 +23,3 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 $doctrineUtility = \App\Utility\DoctrineUtility::getInstance();
 $doctrineUtility->addMappingPath(__DIR__ . '/Classes/Entity');
 $entityManager = $doctrineUtility->getEntityManager();
-$helperSet = $doctrineUtility->getHelperSet();
