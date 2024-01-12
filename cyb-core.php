@@ -119,8 +119,16 @@ class CybCore extends \App\Utility\Singleton {
                     require_once($templatesDirectory . '/generate-translation.php'); ?></div>
                 <div>
                     <?php
-                    var_dump($this->entityManager->getRepository(\App\Entity\WordPressOptions::class)->findOneBy([]));
-                    var_dump($this->entityManager->getRepository(\App\Entity\WordPressUserMeta::class)->findOneBy([]));
+                    /** @var \App\Entity\WordPressOptions */
+                    $wordPressOptions = $this->entityManager->getRepository(\App\Entity\WordPressOptions::class)->findOneBy([]);
+                    /** @var \App\Entity\WordPressUserMeta */
+                    $wordPressUserMeta = $this->entityManager->getRepository(\App\Entity\WordPressUserMeta::class)->findOneBy([]);
+                    ?>Database test:<br><pre><?php
+                    var_dump([
+                        'wordPressOptions' => $wordPressOptions->getOptionName(),
+                        'wordPressUserMeta' => $wordPressUserMeta->getUserId(),
+                    ]);
+                    ?></pre><?php
                     ?>
                 </div>
                 <div>

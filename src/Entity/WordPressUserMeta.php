@@ -3,97 +3,57 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\WordPressUserMetaRepository")
- * @ORM\Table(name="wp_usermeta", indexes={@ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="meta_key", columns={"meta_key"})})
- */
+#[ORM\Entity(repositoryClass: \App\Repository\WordPressUserMetaRepository::class)]
+#[ORM\Table(name: 'wp_usermeta')]
+#[ORM\Index(name: 'user_id', columns: ['user_id'])]
+#[ORM\Index(name: 'meta_key', columns: ['meta_key'])]
 class WordPressUserMeta {
-    /**
-     * @var int
-     * @ORM\Id
-     * @ORM\Column(type="bigint", options={"unsigned": true})
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $umeta_id = 0;
+    #[ORM\Id]
+    #[ORM\Column(type: 'bigint', options: ['unsigned' => true])]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private ?int $umeta_id = null;
 
-    /**
-     * @var int
-     * @ORM\Column(type="bigint", options={"unsigned": true, "default": 0})
-     */
-    private $user_id = 0;
+    #[ORM\Column(type: 'bigint', options: ['unsigned' => true, 'default' => 0])]
+    private int $user_id = 0;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255, nullable=false, options={"collation":"utfutf8mb4_unicode_520_ci8_bin"})
-     */
-    private $meta_key = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['collation' => 'utfutf8mb4_unicode_520_ci8_bin'])]
+    private string $meta_key = '';
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=191, nullable=false, options={"collation":"utf8mb4_unicode_520_ci"})
-     */
-    private $meta_value = '';
+    #[ORM\Column(type: 'string', length: 191, nullable: false, options: ['collation' => 'utf8mb4_unicode_520_ci'])]
+    private string $meta_value = '';
 
-    /**
-     * @return int
-     */
     public function getUmetaId(): int {
         return $this->umeta_id;
     }
 
-    /**
-     * @param int $umeta_id
-     * @return self
-     */
-    public function setUmetaId($umeta_id) {
+    public function setUmetaId(int $umeta_id): self {
         $this->umeta_id = $umeta_id;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getUserId(): int {
         return $this->user_id;
     }
 
-    /**
-     * @param int $user_id
-     * @return self
-     */
-    public function setUserId($user_id) {
+    public function setUserId(int $user_id): self {
         $this->user_id = $user_id;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMetaKey(): string {
         return $this->meta_key;
     }
 
-    /**
-     * @param string $meta_key
-     * @return self
-     */
-    public function setMetaKey($meta_key) {
+    public function setMetaKey(string $meta_key): self {
         $this->meta_key = $meta_key;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMetaValue(): string {
         return $this->meta_value;
     }
 
-    /**
-     * @param string $meta_value
-     * @return self
-     */
-    public function setMetaValue($meta_value) {
+    public function setMetaValue(string $meta_value): self {
         $this->meta_value = $meta_value;
         return $this;
     }
