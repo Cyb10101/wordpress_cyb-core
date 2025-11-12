@@ -95,17 +95,17 @@ class CybCore extends \App\Utility\Singleton {
     public function adminPage() {
         $templatesDirectory = plugin_dir_path(__FILE__) . 'templates';
         ?>
-        <div class="wrap cyb-core-admin">
+        <div class="wrap cyb-core-admin cyb-core-admin_page-general">
             <?php $this->renderBreadcrumb([
                 ['title' => 'General Settings'],
             ]); ?>
 
             <div class="nav-tab-wrapper">
-                <a class="nav-tab nav-tab-active" id="dashboard-tab" href="#dashboard"><?php _e('Dashboard', 'cyb-core'); ?></a>
-                <a class="nav-tab" id="features-tab" href="#development"><?php _e('Development', 'cyb-core'); ?></a>
+                <a class="nav-tab nav-tab-active" href="#dashboard"><?php _e('Dashboard', 'cyb-core'); ?></a>
+                <a class="nav-tab" href="#development"><?php _e('Development', 'cyb-core'); ?></a>
             </div>
 
-            <div id="dashboard" class="container-3">
+            <div id="dashboard" class="container-3" style="display: none;">
                 <div><?php require_once($templatesDirectory . '/id-columns.php'); ?></div>
                 <div>
                 </div>
